@@ -26,6 +26,20 @@ st.markdown("""
         padding-top: 1rem;
         max-width: 90%;
     }
+    /* THE TRUE CENTER FIX */
+    .brand-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .logo-img {
+        width: 250px;
+    }
+    /* Button Styling */
     div.stButton > button:first-child {
         background-color: #0068c9;
         color: white;
@@ -40,42 +54,26 @@ st.markdown("""
     }
     div.stButton > button:hover {
         background-color: #ff4b4b;
-        color: white;
-        border: none;
     }
     [data-testid="stMetricValue"] {
         font-size: 28px;
         color: #1f77b4;
     }
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        margin-bottom: -10px;
-    }
-    h1 {
-        margin-top: -10px !important;
-        padding-top: 0px !important;
-        text-align: center;
-    }
     </style>""", unsafe_allow_html=True)
 
-# --- SECTION 3: HEADER & BRANDING ---
-l_spacer, logo_col, r_spacer = st.columns([1, 2, 1])
-
-with logo_col:
-    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-    st.image("watchdog_header.png", width=250)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown("<h1>Watchdog Validator</h1>", unsafe_allow_html=True)
-    st.markdown("""
-        <p style='text-align: center; font-size: 1.2rem; font-weight: 500; margin-top: -10px;'>
+# --- SECTION 3: HEADER & BRANDING (NEW CENTERED LOGIC) ---
+st.markdown(f"""
+    <div class="brand-wrapper">
+        <img src="data:image/png;base64,{st.image("watchdog_header.png", width=250)}" class="logo-img">
+        <h1 style="margin-top: 10px;">Watchdog Validator</h1>
+        <p style="font-size: 1.2rem; font-weight: 500; color: #333;">
             The Automated Data Gatekeeper: Validating and Protecting your Pipelines.
         </p>
-    """, unsafe_allow_html=True)
+    </div>
+""", unsafe_allow_html=True)
 
+
+with st.columns([1, 2, 1])[1]: # Centers the expander specifically
     with st.expander("🌐 Industry Applications"):
         st.markdown("""
         * **E-Commerce**: Validate transaction integrity and prevent negative pricing.
