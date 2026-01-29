@@ -2,6 +2,9 @@
 
 #This is the Streamlit Front End
 
+#app.py
+#This is the Streamlit Front End
+
 import streamlit as st
 import pandas as pd
 from watchdog_validator import WatchdogValidator
@@ -23,9 +26,7 @@ st.markdown("""
         padding-top: 1rem;
         max-width: 90%;
     }
-    st-emotion-cache-1kyxreq {
-        justify-content: center;
-    }
+    /* Button Styling */
     div.stButton > button:first-child {
         background-color: #0068c9;
         color: white;
@@ -47,38 +48,45 @@ st.markdown("""
         font-size: 28px;
         color: #1f77b4;
     }
+    /* The Center-Alignment Fix */
     .logo-container {
         display: flex;
         justify-content: center;
-        margin-bottom: -20px;
+        align-items: center;
+        width: 100%;
+        margin-bottom: -10px;
     }
     h1 {
         margin-top: -10px !important;
         padding-top: 0px !important;
+        text-align: center;
     }
     </style>""", unsafe_allow_html=True)
 
 # --- SECTION 3: HEADER & BRANDING ---
-col_left, col_mid, col_right = st.columns([1, 2, 1])
-with col_mid:
+# We use a 3-column layout where the middle column is the focus
+l_spacer, logo_col, r_spacer = st.columns([1, 2, 1])
+
+with logo_col:
+    # This div wrapper forces the fixed-width image to stay centered
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     st.image("watchdog_header.png", width=250)
     st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center;'>Watchdog Validator</h1>", unsafe_allow_html=True)
-st.markdown("""
-    <p style='text-align: center; font-size: 1.2rem; font-weight: 500;'>
-        The Automated Data Gatekeeper: Validating, Quarantining, and Protecting your Data Pipelines.
-    </p>
-""", unsafe_allow_html=True)
-
-with st.expander("🌐 Industry Applications - How to use Watchdog"):
+    st.markdown("<h1>Watchdog Validator</h1>", unsafe_allow_html=True)
     st.markdown("""
-    * **E-Commerce**: Validate transaction integrity and prevent negative pricing or ghost orders.
-    * **Healthcare**: Ensure patient records have non-null IDs and valid age/metric ranges.
-    * **Finance**: Sanitize CSV/Excel ledgers before importing into accounting software.
-    * **Marketing**: Cleanse lead lists by ensuring unique email identifiers and contact fields.
-    """)
+        <p style='text-align: center; font-size: 1.2rem; font-weight: 500; margin-top: -10px;'>
+            The Automated Data Gatekeeper: Validating and Protecting your Pipelines.
+        </p>
+    """, unsafe_allow_html=True)
+
+    with st.expander("🌐 Industry Applications"):
+        st.markdown("""
+        * **E-Commerce**: Validate transaction integrity and prevent negative pricing.
+        * **Healthcare**: Ensure patient records have non-null IDs.
+        * **Finance**: Sanitize CSV; Excel ledgers before importing.
+        * **Marketing**: Cleanse lead lists by ensuring unique identifiers.
+        """)
     
 st.markdown("---")
 
@@ -95,7 +103,7 @@ def generate_pdf(summary_data, rules):
     pdf.set_font("Arial", "B", 14)
     pdf.cell(200, 10, "Executive Summary", ln=True)
     pdf.set_font("Arial", "", 12)
-    pdf.cell(100, 10, f"Total Records Processed: {summary_data['total']}")
+    pdf.cell(100, 10, f"Total Records: {summary_data['total']}")
     pdf.cell(100, 10, f"Clean Records: {summary_data['clean']}", ln=True)
     pdf.cell(100, 10, f"Flagged Records: {summary_data['failed']}")
     pdf.cell(100, 10, f"Pass Rate: {summary_data['rate']}%", ln=True)
@@ -182,7 +190,6 @@ if 'df' in st.session_state and st.session_state['df'] is not None:
             
             results, df_clean, df_failed = validator.run_validation_all()
             
-            # Save stats for the UI and PDF
             pass_rate = round((len(df_clean)/len(working_df))*100, 1)
             st.session_state['stats'] = {
                 "total": len(working_df), 
@@ -194,46 +201,8 @@ if 'df' in st.session_state and st.session_state['df'] is not None:
 
             st.balloons()
             st.write("### 📊 3. Data Health Results")
-            
-            # Health Score Visuals
             st.write(f"**Overall Data Health: {pass_rate}%**")
             st.progress(pass_rate / 100)
             
             m1, m2, m3 = st.columns(3)
             m1.metric("Total Records", st.session_state['stats']['total'])
-            m2.metric("Clean Data", st.session_state['stats']['clean'], delta=f"{pass_rate}% Pass")
-            m3.metric("Quarantined", st.session_state['stats']['failed'], delta=f"-{100-pass_rate}% Failed", delta_color="inverse")
-
-            if not df_failed.empty:
-                st.warning(f"🚨 {st.session_state['stats']['failed']} records failed quality checks.")
-                st.write("#### 📝 Failure Log (Preview)")
-                st.dataframe(df_failed.head(10), use_container_width=True)
-            
-            st.divider()
-            st.write("#### 📥 Data Export")
-            d1, d2 = st.columns(2)
-            
-            clean_csv = df_clean.to_csv(index=False).encode('utf-8')
-            d1.download_button("Download Clean CSV", clean_csv, "clean_data.csv", "text/csv")
-            
-            pdf_bytes = generate_pdf(st.session_state['stats'], st.session_state['rules'])
-            d2.download_button("📑 Download PDF Report", pdf_bytes, "validation_report.pdf", "application/pdf")
-
-        except Exception as e:
-            st.error(f"Error during validation: {e}")
-else:
-    st.info("Please provide a data source to begin.")
-
-# --- SECTION 8: FOOTER & DISCLAIMER ---
-st.markdown("---")
-st.markdown("<p style='text-align: center; color: #333; font-weight: 500;'>Built by mikecap22 | watchdog-validator v1.0</p>", unsafe_allow_html=True)
-
-st.markdown("""
-    <div style="background-color: rgba(0, 104, 201, 0.05); padding: 15px; border-radius: 10px; border: 1px solid #0068c9;">
-        <p style="font-size: 1.1rem; color: #000; margin: 0;">
-            <strong>Disclaimer:</strong> This tool is intended for data integrity screening; 
-            validation results are based on user-defined rules. Always verify critical financial 
-            data manually before final processing.
-        </p>
-    </div>
-""", unsafe_allow_html=True)
