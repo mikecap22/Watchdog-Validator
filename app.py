@@ -61,7 +61,7 @@ st.markdown("""
 # --- SECTION 3: HEADER & BRANDING ---
 col1, col2, col3 = st.columns([1, 1, 1])
 with col2:
-    st.image("watchdog_header.png", width=250)
+    st.image("watchdog_header.png", width=500)
 
 st.markdown("<h1 class='centered-text'>Watchdog Validator</h1>", unsafe_allow_html=True)
 st.markdown("""
