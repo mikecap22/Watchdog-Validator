@@ -13,12 +13,17 @@ from datetime import datetime
 st.set_page_config(
     page_title="Watchdog | Data Quality Gate", 
     page_icon="🐕‍🦺",
-    layout="centered"
+    layout="wide"
 )
 
 # --- SECTION 2: VISUAL STYLING ---
 st.markdown("""
     <style>
+    /* Global container width control */
+    .block-container {
+        padding-top: 2rem;
+        max-width: 90%;
+    }
     div.stButton > button:first-child {
         background-color: #0068c9;
         color: white;
@@ -48,7 +53,7 @@ st.markdown("""
     </style>""", unsafe_allow_html=True)
 
 # --- SECTION 3: HEADER & BRANDING ---
-col_left, col_mid, col_right = st.columns([1, 4, 1])
+col_left, col_mid, col_right = st.columns([1, 2, 1])
 with col_mid:
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     st.image("watchdog_header.png", use_container_width=True)
