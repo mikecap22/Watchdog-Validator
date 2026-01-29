@@ -24,15 +24,17 @@ st.markdown("""
         max-width: 1500px;
         margin: 0 auto;
     }
-    /* Centers the logo image specifically */
-   [data-testid="stImage"] {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
     /* Centers all headers and text */
     .centered-text {
         text-align: center;
+    }
+    /* This ensures any div we mark as 'logo-box' centers its contents */
+    .logo-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 10px 0;
     }
     /* Button Styling */
     div.stButton > button:first-child {
@@ -57,8 +59,9 @@ st.markdown("""
     </style>""", unsafe_allow_html=True)
 
 # --- SECTION 3: HEADER & BRANDING ---
-# No more columns here; CSS handles the centering
-st.image("watchdog_header.png", align=center)
+col1, col2, col3 = st.columns([1, 1, 1])
+with col2:
+    st.image("watchdog_header.png", width=250)
 
 st.markdown("<h1 class='centered-text'>Watchdog Validator</h1>", unsafe_allow_html=True)
 st.markdown("""
