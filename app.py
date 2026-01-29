@@ -58,7 +58,7 @@ st.markdown("""
 
 # --- SECTION 3: HEADER & BRANDING ---
 # No more columns here; CSS handles the centering
-st.image("watchdog_header.png", align=center
+st.image("watchdog_header.png", align=center)
 
 st.markdown("<h1 class='centered-text'>Watchdog Validator</h1>", unsafe_allow_html=True)
 st.markdown("""
