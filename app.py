@@ -21,14 +21,14 @@ st.markdown("""
     <style>
     /* Centers the entire app content and limits its width */
     .stApp {
-        max-width: 1000px;
+        max-width: 1500px;
         margin: 0 auto;
     }
     /* Centers the logo image specifically */
-    .stImage > img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+   [data-testid="stImage"] {
+        display: flex;
+        justify-content: center;
+        width: 100%;
     }
     /* Centers all headers and text */
     .centered-text {
