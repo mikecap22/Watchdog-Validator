@@ -70,13 +70,19 @@ st.markdown("""
     </p>
 """, unsafe_allow_html=True)
 
-with st.expander("🌐 Industry Applications"):
-    st.markdown("""
-    * **E-Commerce**: Validate transaction integrity and prevent negative pricing.
-    * **Healthcare**: Ensure patient records have non-null IDs.
-    * **Finance**: Sanitize CSV; Excel ledgers before importing.
-    * **Marketing**: Cleanse lead lists by ensuring unique identifiers.
-    """)
+st.markdown("""
+    <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
+        <h4 style="margin-top: 0; text-align: center;">🌐 Industry Applications</h4>
+        <div style="display: flex; justify-content: center;">
+            <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+                <li><strong>E-Commerce</strong>: Validate transaction integrity and prevent negative pricing.</li>
+                <li><strong>Healthcare</strong>: Ensure patient records have non-null IDs.</li>
+                <li><strong>Finance</strong>: Sanitize CSV; Excel ledgers before importing.</li>
+                <li><strong>Marketing</strong>: Cleanse lead lists by ensuring unique identifiers.</li>
+            </ul>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
     
 st.markdown("---")
 
