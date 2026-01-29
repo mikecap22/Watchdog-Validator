@@ -8,17 +8,24 @@ This pipeline validates e-commerce transaction data against defined business rul
 
 ## ✨ Features
 
+- **Multiple Data Sources**: Upload CSV, Excel files, or connect directly to SQL databases
+- **Interactive Web Interface**: User-friendly Streamlit app for non-technical users
 - **Automated Data Validation**: Validates incoming transaction data against business rules
+- **Flexible Rule Configuration**: Customize validation rules through the web interface
 - **Quarantine Pattern**: Automatically separates clean data from failed records
 - **Business Rule Enforcement**:
   - Price must be positive (Finance integrity)
   - Quantity cannot be null (Operational integrity)
   - Customer ID must exist (Marketing/CRM tracking)
-- **Detailed Reporting**: Provides summary of clean vs. flagged records
+  - Custom validations (Unique values, set membership, etc.)
+- **Detailed Reporting**: Provides summary of clean vs. flagged records with failure reasons
+- **Export Capabilities**: Download clean and failed datasets separately
+- **Database Support**: PostgreSQL, MySQL, SQLite, SQL Server
 
 ## 🛠️ Technologies Used
 
 - **Python 3.x**
+- **Streamlit**: Interactive web interface
 - **pandas**: Data manipulation and analysis
 - **Great Expectations**: Data validation framework
 
@@ -38,10 +45,33 @@ cd watchdog-validator
 
 2. Install required packages:
 ```bash
-pip install pandas great-expectations
+pip install -r requirements.txt
+```
+
+3. Run the Streamlit app:
+```bash
+streamlit run app.py
 ```
 
 ## 🚀 Usage
+
+### Option 1: Web Interface (Recommended for Demos)
+
+1. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+2. Run the Streamlit app:
+```bash
+streamlit run app.py
+```
+
+3. Open your browser to `http://localhost:8501`
+
+4. Upload your CSV, configure validation rules, and download results!
+
+### Option 2: Command Line Script
 
 1. Place your `ecommerce_transactions.csv` file in the project directory
 
@@ -54,8 +84,9 @@ python your_script_name.py
    - `clean_transactions.csv` - Records that passed all validation rules
    - `failed_transactions.csv` - Records that failed one or more rules
 
-## 📊 Input Data Format
+## 📊 Input Data Formats
 
+### CSV Files
 Your CSV file should contain the following columns:
 - `Transaction ID`
 - `Customer ID`
@@ -70,6 +101,18 @@ Transaction ID,Customer ID,Price,Quantity,Product
 2,C002,15.50,1,Gadget
 3,C003,99.00,3,Tool
 ```
+
+### Excel Files (.xlsx, .xls)
+Upload multi-sheet Excel workbooks and select which sheet to validate.
+
+### SQL Databases
+Connect to your database and validate data directly:
+- **PostgreSQL**
+- **MySQL**
+- **SQLite**
+- **SQL Server**
+
+Query entire tables or use custom SQL queries.
 
 ## 🔍 Validation Rules
 
@@ -98,12 +141,14 @@ Flagged Rows: 3
 
 ```
 .
-├── your_script_name.py          # Main validation script
-├── ecommerce_transactions.csv   # Input data (not tracked in git)
-├── clean_transactions.csv       # Output: validated data (not tracked in git)
-├── failed_transactions.csv      # Output: quarantined data (not tracked in git)
-├── .gitignore                   # Git ignore file
-└── README.md                    # This file
+├── app.py                           # Streamlit web application
+├── your_script_name.py              # Command-line validation script
+├── requirements.txt                 # Python dependencies
+├── ecommerce_transactions.csv       # Input data (not tracked in git)
+├── clean_transactions.csv           # Output: validated data (not tracked in git)
+├── failed_transactions.csv          # Output: quarantined data (not tracked in git)
+├── .gitignore                       # Git ignore file
+└── README.md                        # This file
 ```
 
 ## 🔧 Customization
