@@ -46,12 +46,27 @@ st.markdown("""
 
 # --- SECTION 3: HEADER & BRANDING ---
 # Displays your logo centered and the main project titles.
-col_left, col_mid, col_right = st.columns([1, 2, 1])
+col_left, col_mid, col_right = st.columns([1, 4, 1])
 with col_mid:
+    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     st.image("watchdog_header.png", use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<h1 style='text-align: center;'>Watchdog Validator</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-size: 1.2rem; color: #666;'>Automated Data Quality Pipeline</p>", unsafe_allow_html=True)
+st.markdown("""
+    <p style='text-align: center; font-size: 1.3rem; font-weight: 500;'>
+        The Automated Data Gatekeeper: Validating, Quarantining, and Protecting your Data Pipelines.
+    </p>
+""", unsafe_allow_html=True)
+
+with st.expander("🌐 Industry Applications - How to use Watchdog"):
+    st.markdown("""
+    * **E-Commerce**: Validate transaction integrity and prevent negative pricing or ghost orders.
+    * **Healthcare**: Ensure patient records have non-null IDs and valid age/metric ranges.
+    * **Finance**: Sanitize CSV/Excel ledgers before importing into accounting software.
+    * **Marketing**: Cleanse lead lists by ensuring unique email identifiers and contact fields.
+    """)
+    
 st.markdown("---")
 
 # --- SECTION 4: PDF REPORT GENERATION ---
@@ -169,16 +184,23 @@ if 'df' in st.session_state and st.session_state['df'] is not None:
 
             st.balloons()
             st.write("### 📊 3. Analysis Results")
-            m1, m2, m3 = st.columns(3)
-            m1.metric("Total Records", st.session_state['stats']['total'])
-            m2.metric("Clean Data", st.session_state['stats']['clean'])
-            m3.metric("Quarantined", st.session_state['stats']['failed'])
+            st.balloons()
+        st.write("### 📊 3. Data Health Results")
+        
+        # Success Rate Progress Bar
+        pass_rate = st.session_state['stats']['rate']
+        st.write(f"**Overall Data Health: {pass_rate}%**")
+        st.progress(pass_rate / 100) # Simple visual anyone understands
+        
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Total Records", st.session_state['stats']['total'])
+        m2.metric("Clean Data", st.session_state['stats']['clean'], delta=f"{pass_rate}% Pass")
+        m3.metric("Quarantined", st.session_state['stats']['failed'], delta=f"-{100-pass_rate}% Failed", delta_color="inverse")
 
-            st.bar_chart(pd.DataFrame({"Status": ["Clean", "Flagged"], "Count": [len(df_clean), len(df_failed)]}), x="Status", y="Count", color="#0068c9")
-
-            if not df_failed.empty:
-                st.write("#### 📝 Failure Log (Preview)")
-                st.dataframe(df_failed.head(10), use_container_width=True)
+        if not df_failed.empty:
+            st.warning(f"🚨 {st.session_state['stats']['failed']} records failed quality checks and were moved to quarantine.")
+            st.write("#### 📝 Failure Log (Preview)")
+            st.dataframe(df_failed.head(10), use_container_width=True)
             
             st.divider()
             st.write("#### 📥 Data Export")
@@ -197,10 +219,14 @@ else:
 
 # --- SECTION 8: FOOTER & DISCLAIMER ---
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: #666;'>Built by mikecap22 | watchdog-validator v1.0</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #333;'>Built by mikecap22 | watchdog-validator v1.0</p>", unsafe_allow_html=True)
 
 st.markdown("""
-    <small><strong>Disclaimer:</strong> This tool is intended for data integrity screening; 
-    validation results are based on user-defined rules. Always verify critical financial 
-    data manually before final processing.</small>
+    <div style="background-color: rgba(255, 75, 75, 0.1); padding: 15px; border-radius: 10px; border: 1px solid #ff4b4b;">
+        <p style="font-size: 1rem; color: #333; margin: 0;">
+            <strong>Disclaimer:</strong> This tool is intended for data integrity screening; 
+            validation results are based on user-defined rules. Always verify critical financial 
+            data manually before final processing.
+        </p>
+    </div>
 """, unsafe_allow_html=True)
