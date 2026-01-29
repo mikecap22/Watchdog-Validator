@@ -1,47 +1,43 @@
 # Watchdog Validator
 
-A robust data validation pipeline for e-commerce transactions using Great Expectations. This project implements automated data quality checks and separates clean data from problematic records using a quarantine pattern.
+A professional data governance and integrity suite built with Great Expectations. This project implements an automated data quality gate that separates clean data from problematic records using a robust quarantine pattern.
 
 ## 📋 Overview
 
-This pipeline validates e-commerce transaction data against defined business rules and automatically separates clean records from those that fail validation. Failed records are quarantined for review and remediation.
+Watchdog Validator is designed to act as a "Gatekeeper" for data pipelines. It validates incoming datasets against strict business rules; automatically quarantining records that fail quality checks to prevent downstream system corruption.
 
 ## ✨ Features
 
-- **Multiple Data Sources**: Upload CSV, Excel files, or connect directly to SQL databases
-- **Interactive Web Interface**: User-friendly Streamlit app for non-technical users
-- **Automated Data Validation**: Validates incoming transaction data against business rules
-- **Flexible Rule Configuration**: Customize validation rules through the web interface
-- **Quarantine Pattern**: Automatically separates clean data from failed records
-- **Business Rule Enforcement**:
-  - Price must be positive (Finance integrity)
-  - Quantity cannot be null (Operational integrity)
-  - Customer ID must exist (Marketing/CRM tracking)
-  - Custom validations (Unique values, set membership, etc.)
-- **Detailed Reporting**: Provides summary of clean vs. flagged records with failure reasons
-- **Export Capabilities**: Download clean and failed datasets separately
-- **Database Support**: PostgreSQL, MySQL, SQLite, SQL Server
+* **Visual Analytics**: Real-time bar charts and metrics showing data health at a glance.
+* **Single-Stream UI**: A modern; tab-less Streamlit interface designed for efficiency.
+* **Source Agnostic**: Direct support for CSV; Excel; and SQL Databases (PostgreSQL; MySQL; SQLite).
+* **Dynamic Column Mapping**: Map any dataset columns to validation logic without touching code.
+* **Professional PDF Reporting**: Generate downloadable executive summaries of validation results.
+* **Advanced Rule Engine**: 
+    * Range checks for financial integrity.
+    * Null value detection for operational completeness.
+    * Uniqueness constraints for identity management.
 
 ## 🛠️ Technologies Used
 
-- **Python 3.x**
-- **Streamlit**: Interactive web interface
-- **pandas**: Data manipulation and analysis
-- **Great Expectations**: Data validation framework
+* **Python 3.11+**
+* **Streamlit**: Interactive web interface.
+* **Great Expectations**: Enterprise-grade data validation framework.
+* **SQLAlchemy**: Database connectivity engine.
+* **FPDF**: Automated PDF report generation.
 
 ## 📦 Installation
 
 ### Prerequisites
-- Python 3.7 or higher
-- pip package manager
+* Python 3.11 or higher
+* pip package manager
 
 ### Setup
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/mikecap22/watchdog-validator.git
+git clone [https://github.com/mikecap22/watchdog-validator.git](https://github.com/mikecap22/watchdog-validator.git)
 cd watchdog-validator
-```
 
 2. Install required packages:
 ```bash
@@ -55,72 +51,23 @@ streamlit run app.py
 
 ## 🚀 Usage
 
-### Option 1: Web Interface (Recommended for Demos)
+1. Source Selection: Choose between uploading a file or connecting to a live SQL database.
 
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+2. Column Mapping: Select which columns in your data represent IDs; Prices; or Users.
 
-2. Run the Streamlit app:
-```bash
-streamlit run app.py
-```
+3. Configure Rules: Toggle specific quality checks (e.g.; Reject Negatives; Reject Nulls).
 
-3. Open your browser to `http://localhost:8501`
+4. Execute: Run the engine to see visual results and balloons on success.
 
-4. Upload your CSV, configure validation rules, and download results!
+5. Export: Download the "Clean" dataset or the "Executive PDF Report" for stakeholders.
 
-### Option 2: Command Line Script
-
-1. Place your `ecommerce_transactions.csv` file in the project directory
-
-2. Run the validation pipeline:
-```bash
-python your_script_name.py
-```
-
-3. Check the output:
-   - `clean_transactions.csv` - Records that passed all validation rules
-   - `failed_transactions.csv` - Records that failed one or more rules
-
-## 📊 Input Data Formats
-
-### CSV Files
-Your CSV file should contain the following columns:
-- `Transaction ID`
-- `Customer ID`
-- `Price`
-- `Quantity`
-- `Product`
-
-Example:
-```csv
-Transaction ID,Customer ID,Price,Quantity,Product
-1,C001,29.99,2,Widget
-2,C002,15.50,1,Gadget
-3,C003,99.00,3,Tool
-```
-
-### Excel Files (.xlsx, .xls)
-Upload multi-sheet Excel workbooks and select which sheet to validate.
-
-### SQL Databases
-Connect to your database and validate data directly:
-- **PostgreSQL**
-- **MySQL**
-- **SQLite**
-- **SQL Server**
-
-Query entire tables or use custom SQL queries.
 
 ## 🔍 Validation Rules
 
-| Rule | Column | Validation | Business Impact |
-|------|--------|------------|-----------------|
-| 1 | Price | Must be >= 0 | Finance integrity - prevents negative prices |
-| 2 | Quantity | Cannot be null | Operational integrity - ensures inventory tracking |
-| 3 | Customer ID | Cannot be null | Marketing/CRM - maintains customer relationships |
+Rule	    Validation	                    Business Impact		
+Range Check	Price/Amount must be >= 0	    Prevents financial loss from negative billing.		
+Null Check	Critical IDs cannot be empty	Ensures data joins and CRM tracking remain intact.		
+Uniqueness	Transaction IDs must be unique	Prevents duplicate processing and double-counting.		
 
 ## 📈 Output
 
@@ -141,31 +88,15 @@ Flagged Rows: 3
 
 ```
 .
-├── app.py                           # Streamlit web application
-├── your_script_name.py              # Command-line validation script
-├── requirements.txt                 # Python dependencies
-├── ecommerce_transactions.csv       # Input data (not tracked in git)
-├── clean_transactions.csv           # Output: validated data (not tracked in git)
-├── failed_transactions.csv          # Output: quarantined data (not tracked in git)
-├── .gitignore                       # Git ignore file
-└── README.md                        # This file
-```
+├── app.py                   # Streamlit front-end with visual UI logic
+├── watchdog_validator.py    # Backend class-based validation engine
+├── watchdog_header.png      # Centered branding header image
+├── requirements.txt         # Project dependencies
+└── README.md                # Project documentation
 
-## 🔧 Customization
+⚖️ Disclaimer
+This tool is intended for data integrity screening. Validation results are based on user-defined rules. Always verify critical financial data manually before final processing.
 
-To add additional validation rules, add more expectations in the script:
-
-```python
-# Example: Add maximum price validation
-validator.expect_column_values_to_be_between("Price", min_value=0, max_value=10000)
-
-# Example: Validate product names
-validator.expect_column_values_to_be_in_set("Product", ["Widget", "Gadget", "Tool"])
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📝 License
 
@@ -173,7 +104,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 👤 Author
 
-**mikecap22**
+Michael Cappello
 - GitHub: [@mikecap22](https://github.com/mikecap22)
 
 ## 🙏 Acknowledgments
