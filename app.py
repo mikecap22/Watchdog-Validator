@@ -183,9 +183,7 @@ if 'df' in st.session_state and st.session_state['df'] is not None:
             st.session_state['rules'] = rules_applied
 
             st.balloons()
-            st.write("### 📊 3. Analysis Results")
-            st.balloons()
-        st.write("### 📊 3. Data Health Results")
+            st.write("### 📊 3. Data Health Results")
         
         # Success Rate Progress Bar
         pass_rate = st.session_state['stats']['rate']
