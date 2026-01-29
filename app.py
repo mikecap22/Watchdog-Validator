@@ -57,7 +57,6 @@ col_left, col_mid, col_right = st.columns([1, 2, 1])
 with col_mid:
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     st.image("watchdog_header.png", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<h1 style='text-align: center;'>Watchdog Validator</h1>", unsafe_allow_html=True)
 st.markdown("""
