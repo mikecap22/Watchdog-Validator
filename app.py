@@ -10,7 +10,6 @@ from fpdf import FPDF
 from datetime import datetime
 
 # --- SECTION 1: PAGE SETUP ---
-# Defines the browser tab title, icon, and the "centered" layout.
 st.set_page_config(
     page_title="Watchdog | Data Quality Gate", 
     page_icon="🐕‍🦺",
@@ -18,7 +17,6 @@ st.set_page_config(
 )
 
 # --- SECTION 2: VISUAL STYLING ---
-# Injects custom CSS to style buttons (Blue to Red hover) and metrics.
 st.markdown("""
     <style>
     div.stButton > button:first-child {
@@ -42,10 +40,14 @@ st.markdown("""
         font-size: 28px;
         color: #1f77b4;
     }
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+    }
     </style>""", unsafe_allow_html=True)
 
 # --- SECTION 3: HEADER & BRANDING ---
-# Displays your logo centered and the main project titles.
 col_left, col_mid, col_right = st.columns([1, 4, 1])
 with col_mid:
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
@@ -70,7 +72,6 @@ with st.expander("🌐 Industry Applications - How to use Watchdog"):
 st.markdown("---")
 
 # --- SECTION 4: PDF REPORT GENERATION ---
-# Logic to build the Executive Summary PDF using the fpdf2 library.
 def generate_pdf(summary_data, rules):
     pdf = FPDF()
     pdf.add_page()
@@ -97,8 +98,7 @@ def generate_pdf(summary_data, rules):
     
     return pdf.output(dest="S").encode("latin-1")
 
-# --- SECTION 5: DATA SOURCE SELECTION (CSV, EXCEL, SQL) ---
-# Allows users to upload files OR connect to a DB with a custom SQL script.
+# --- SECTION 5: DATA SOURCE SELECTION ---
 st.write("### 📂 1. Source Selection")
 data_source = st.radio("Select Data Source", ["CSV", "Excel", "SQL Database"], horizontal=True)
 
@@ -137,7 +137,6 @@ else:
         st.session_state['df'] = df
 
 # --- SECTION 6: VALIDATION CONFIGURATION ---
-# User chooses which columns to validate and which rules to toggle.
 if 'df' in st.session_state and st.session_state['df'] is not None:
     working_df = st.session_state['df']
     st.write("### ⚙️ 2. Configure Validation Rules")
@@ -154,7 +153,6 @@ if 'df' in st.session_state and st.session_state['df'] is not None:
         check_uniques = st.checkbox("Ensure IDs are Unique", value=False)
     
     # --- SECTION 7: RUN VALIDATION & DISPLAY RESULTS ---
-    # Executes the backend logic and shows the visual summary/failure log.
     if st.button("🚀 RUN VALIDATION ENGINE"):
         try:
             validator = WatchdogValidator(working_df)
@@ -173,32 +171,32 @@ if 'df' in st.session_state and st.session_state['df'] is not None:
             
             results, df_clean, df_failed = validator.run_validation_all()
             
-            # Save stats for the PDF generator
+            # Save stats for the UI and PDF
+            pass_rate = round((len(df_clean)/len(working_df))*100, 1)
             st.session_state['stats'] = {
                 "total": len(working_df), 
                 "clean": len(df_clean), 
                 "failed": len(df_failed), 
-                "rate": round((len(df_clean)/len(working_df))*100, 1)
+                "rate": pass_rate
             }
             st.session_state['rules'] = rules_applied
 
             st.balloons()
             st.write("### 📊 3. Data Health Results")
-        
-        # Success Rate Progress Bar
-        pass_rate = st.session_state['stats']['rate']
-        st.write(f"**Overall Data Health: {pass_rate}%**")
-        st.progress(pass_rate / 100) # Simple visual anyone understands
-        
-        m1, m2, m3 = st.columns(3)
-        m1.metric("Total Records", st.session_state['stats']['total'])
-        m2.metric("Clean Data", st.session_state['stats']['clean'], delta=f"{pass_rate}% Pass")
-        m3.metric("Quarantined", st.session_state['stats']['failed'], delta=f"-{100-pass_rate}% Failed", delta_color="inverse")
+            
+            # Health Score Visuals
+            st.write(f"**Overall Data Health: {pass_rate}%**")
+            st.progress(pass_rate / 100)
+            
+            m1, m2, m3 = st.columns(3)
+            m1.metric("Total Records", st.session_state['stats']['total'])
+            m2.metric("Clean Data", st.session_state['stats']['clean'], delta=f"{pass_rate}% Pass")
+            m3.metric("Quarantined", st.session_state['stats']['failed'], delta=f"-{100-pass_rate}% Failed", delta_color="inverse")
 
-        if not df_failed.empty:
-            st.warning(f"🚨 {st.session_state['stats']['failed']} records failed quality checks and were moved to quarantine.")
-            st.write("#### 📝 Failure Log (Preview)")
-            st.dataframe(df_failed.head(10), use_container_width=True)
+            if not df_failed.empty:
+                st.warning(f"🚨 {st.session_state['stats']['failed']} records failed quality checks.")
+                st.write("#### 📝 Failure Log (Preview)")
+                st.dataframe(df_failed.head(10), use_container_width=True)
             
             st.divider()
             st.write("#### 📥 Data Export")
@@ -217,11 +215,11 @@ else:
 
 # --- SECTION 8: FOOTER & DISCLAIMER ---
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: #333;'>Built by mikecap22 | watchdog-validator v1.0</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #333; font-weight: 500;'>Built by mikecap22 | watchdog-validator v1.0</p>", unsafe_allow_html=True)
 
 st.markdown("""
-    <div style="background-color: rgba(255, 75, 75, 0.1); padding: 15px; border-radius: 10px; border: 1px solid #ff4b4b;">
-        <p style="font-size: 1rem; color: #333; margin: 0;">
+    <div style="background-color: rgba(0, 104, 201, 0.05); padding: 15px; border-radius: 10px; border: 1px solid #0068c9;">
+        <p style="font-size: 1.1rem; color: #000; margin: 0;">
             <strong>Disclaimer:</strong> This tool is intended for data integrity screening; 
             validation results are based on user-defined rules. Always verify critical financial 
             data manually before final processing.
