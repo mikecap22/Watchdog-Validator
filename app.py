@@ -2,9 +2,6 @@
 
 #This is the Streamlit Front End
 
-#app.py
-#This is the Streamlit Front End
-
 import streamlit as st
 import pandas as pd
 from watchdog_validator import WatchdogValidator
@@ -22,22 +19,20 @@ st.set_page_config(
 # --- SECTION 2: VISUAL STYLING ---
 st.markdown("""
     <style>
-    .block-container {
-        padding-top: 1rem;
-        max-width: 90%;
+    /* Centers the entire app content and limits its width */
+    .stApp {
+        max-width: 1000px;
+        margin: 0 auto;
     }
-    /* THE TRUE CENTER FIX */
-    .brand-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
+    /* Centers the logo image specifically */
+    .stImage > img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Centers all headers and text */
+    .centered-text {
         text-align: center;
-        margin-bottom: 20px;
-    }
-    .logo-img {
-        width: 250px;
     }
     /* Button Styling */
     div.stButton > button:first-child {
@@ -61,26 +56,24 @@ st.markdown("""
     }
     </style>""", unsafe_allow_html=True)
 
-# --- SECTION 3: HEADER & BRANDING (NEW CENTERED LOGIC) ---
-st.markdown(f"""
-    <div class="brand-wrapper">
-        <img src="data:image/png;base64,{st.image("watchdog_header.png", width=250)}" class="logo-img">
-        <h1 style="margin-top: 10px;">Watchdog Validator</h1>
-        <p style="font-size: 1.2rem; font-weight: 500; color: #333;">
-            The Automated Data Gatekeeper: Validating and Protecting your Pipelines.
-        </p>
-    </div>
+# --- SECTION 3: HEADER & BRANDING ---
+# No more columns here; CSS handles the centering
+st.image("watchdog_header.png", width=250)
+
+st.markdown("<h1 class='centered-text'>Watchdog Validator</h1>", unsafe_allow_html=True)
+st.markdown("""
+    <p class='centered-text' style='font-size: 1.2rem; font-weight: 500;'>
+        The Automated Data Gatekeeper: Validating and Protecting your Pipelines.
+    </p>
 """, unsafe_allow_html=True)
 
-
-with st.columns([1, 2, 1])[1]: # Centers the expander specifically
-    with st.expander("🌐 Industry Applications"):
-        st.markdown("""
-        * **E-Commerce**: Validate transaction integrity and prevent negative pricing.
-        * **Healthcare**: Ensure patient records have non-null IDs.
-        * **Finance**: Sanitize CSV; Excel ledgers before importing.
-        * **Marketing**: Cleanse lead lists by ensuring unique identifiers.
-        """)
+with st.expander("🌐 Industry Applications"):
+    st.markdown("""
+    * **E-Commerce**: Validate transaction integrity and prevent negative pricing.
+    * **Healthcare**: Ensure patient records have non-null IDs.
+    * **Finance**: Sanitize CSV; Excel ledgers before importing.
+    * **Marketing**: Cleanse lead lists by ensuring unique identifiers.
+    """)
     
 st.markdown("---")
 
@@ -193,7 +186,6 @@ if 'df' in st.session_state and st.session_state['df'] is not None:
             }
             st.session_state['rules'] = rules_applied
 
-            # UI Feedback
             st.balloons()
             st.write("### 📊 3. Data Health Results")
             st.write(f"**Overall Data Health: {pass_rate}%**")
