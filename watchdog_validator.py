@@ -33,7 +33,15 @@ class WatchdogValidator:
 
     @classmethod
     def from_excel(cls, filepath: str, sheet_name: Union[str, int] = 0, **kwargs):
-        df = pd.read_excel(filepath, sheet_name=sheet_name, **kwargs)
+        """
+        Loads Excel data automatically selecting the engine for .xls or .xlsx formats.
+        """
+        if filepath.lower().endswith(".xls"):
+            # The xlrd engine is required for legacy .xls files
+            df = pd.read_excel(filepath, sheet_name=sheet_name, engine='xlrd', **kwargs)
+        else:
+            # openpyxl is the default for modern .xlsx files
+            df = pd.read_excel(filepath, sheet_name=sheet_name, **kwargs)
         return cls(df)
 
     @classmethod
